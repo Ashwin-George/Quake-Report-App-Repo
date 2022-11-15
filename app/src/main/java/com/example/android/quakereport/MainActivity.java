@@ -36,6 +36,8 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<ArrayList<Quake>> {
     private static final String USGS_request="https://earthquake.usgs.gov/fdsnws/event/1/query";
@@ -49,10 +51,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
     private TextView emptyTextView;
     private int loader_id = 1;
 
+    LottieAnimationView loadingAnim;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loadingAnim= findViewById(R.id.animationView);
         ConnectivityManager cm;
         cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -91,8 +97,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
             loaderManager.initLoader(loader_id, null, this);
             Log.v(LOG_TAG, "InitLoader called");
         } else {
-            View indicator = findViewById(R.id.loading_spinner);
-            indicator.setVisibility(View.GONE);
+//            View indicator = findViewById(R.id.animationView);
+            loadingAnim.setVisibility(View.GONE);
+
 
             emptyTextView = findViewById(R.id.emptyState);
             emptyTextView.setText("No internet connection found");
@@ -127,8 +134,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<A
 
     @Override
     public void onLoadFinished(Loader<ArrayList<Quake>> loader, ArrayList<Quake> data) {
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
-        progressBar.setVisibility(View.GONE);
+//        ProgressBar progressBar = (ProgressBar) findViewById(R.id.animationView);
+        loadingAnim.setVisibility(View.GONE);
         itemsAdapter.clear();
 
         Log.v(LOG_TAG, "Now in onLoadFinished");
